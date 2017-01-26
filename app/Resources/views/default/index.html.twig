@@ -6,10 +6,7 @@
     <div id="wrapper">
         <div id="container">
             {% if app.user %}
-                {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <input type="submit" value="Create" />
-            {{ form_end(form) }}
+                {{  render(controller('AppBundle:Message:new')) }}
             {% endif %}
 
             <fieldset>
