@@ -24,17 +24,7 @@
                 <td>{% if message.updatedAt %}{{ message.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ message.user.id }}</td>
                 <td>
-                    {% if message.picture is not empty %}
-                        {% if message.picture|ext == 'mp4' %}
-                            <video width="80" height="45" controls="controls">
-                                <source src="{{ asset('uploads/pictures/' ~ message.picture) }}" type="video/mp4" />
-                            </video>
-                        {% elseif message.picture|ext == 'pdf' %}
-                            <a href="{{ asset('uploads/pictures/' ~ message.picture) }}" target="_blank"><img src="{{ asset('images/telechargement.png') }}"/></a>
-                        {% else %}
-                            <img src="{{ asset('uploads/pictures/' ~ message.picture) }}" style="max-width: 64px;" />
-                        {% endif %}
-                    {% endif %}
+                    {{ include('upload.html.twig') }}
                 </td>
                 <td>
                     <ul>
