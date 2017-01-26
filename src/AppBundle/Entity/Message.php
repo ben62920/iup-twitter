@@ -70,7 +70,7 @@ class Message
      * @ORM\Column(type="string", nullable=true)
      *
      * @Assert\NotBlank(message="Please, upload the picture.")
-     * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif", "video/mp4" })
+     * @Assert\File(mimeTypes={ "image/jpeg", "image/png", "image/gif", "video/mp4", "application/pdf" })
      */
     private $picture;
 
