@@ -19,28 +19,30 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $securityContext = $this->container->get('security.authorization_checker');
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $newMessage = new Message($this->getUser());
+            $form = $this->createForm('AppBundle\Form\MessageType', $newMessage);
+            $form->handleRequest($request);
 
-        $newMessage = new Message($this->getUser());
-        $form = $this->createForm('AppBundle\Form\MessageType', $newMessage);
-        $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+                $file = $newMessage->getPicture();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file = $newMessage->getPicture();
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
-            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                // Move the file to the directory where brochures are stored
+                $file->move(
+                    $this->getParameter('pictures_directory'),
+                    $fileName
+                );
 
-            // Move the file to the directory where brochures are stored
-            $file->move(
-                $this->getParameter('pictures_directory'),
-                $fileName
-            );
+                $newMessage->setPicture($fileName);
 
-            $newMessage->setPicture($fileName);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newMessage);
-            $em->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($newMessage);
+                $em->flush();
+            }
         }
         $messages = $this->getDoctrine()
             ->getRepository('AppBundle:Message')
@@ -53,10 +55,15 @@ class DefaultController extends Controller
             5/*limit per page*/
         );
 
-
-        return $this->render('default/index.html.twig', [
-            'pagination' => $pagination,'form' => $form->createView()
-        ]);
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->render('default/index.html.twig', [
+                'pagination' => $pagination, 'form' => $form->createView()
+            ]);
+        }else{
+            return $this->render('default/index.html.twig', [
+                'pagination' => $pagination
+            ]);
+        }
     }
 
     /**
