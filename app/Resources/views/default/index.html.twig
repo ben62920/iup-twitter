@@ -87,7 +87,7 @@
                             <i class="fa fa-twitter" aria-hidden="true"></i>
                             <a href="{{ path('retweet' , {'id' : message.id }) }}"> Retweet</a>
                             {% endif %}
-
+<a href="mailto:votre_email?subject= tweet&body= {{ message.content }}">mail</a>
                         </div>
                     </div>
                 {% else %}
