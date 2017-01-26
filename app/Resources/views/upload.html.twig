@@ -4,7 +4,7 @@
             <source src="{{ asset('uploads/pictures/' ~ message.picture) }}" type="video/mp4" />
         </video>
     {% elseif message.picture|ext == 'pdf' %}
-        <a href="{{ asset('uploads/pictures/' ~ message.picture) }}" target="_blank"><img src="{{ asset('images/telechargement.png') }}"/></a>
+        <a href="{{ asset('uploads/pictures/' ~ message.picture) }}" target="_blank">  <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"></i></a>
     {% else %}
         <img src="{{ asset('uploads/pictures/' ~ message.picture) }}" style="max-width: 256px;" />
     {% endif %}
