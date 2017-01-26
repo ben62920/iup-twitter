@@ -8,20 +8,46 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 
 class DefaultController extends Controller
 {
     /**
      * @Route("/", name="homepage")
+     * @Method({"GET", "POST"})
      */
     public function indexAction(Request $request)
     {
+
+        $newMessage = new Message($this->getUser());
+        $form = $this->createForm('AppBundle\Form\MessageType', $newMessage);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+            $file = $newMessage->getPicture();
+
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            // Move the file to the directory where brochures are stored
+            $file->move(
+                $this->getParameter('pictures_directory'),
+                $fileName
+            );
+
+            $newMessage->setPicture($fileName);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newMessage);
+            $em->flush();
+        }
         $messages = $this->getDoctrine()
             ->getRepository('AppBundle:Message')
             ->findByOrderedByDate();
 
         return $this->render('default/index.html.twig', [
-            'messages' => $messages,
+            'messages' => $messages,'form' => $form->createView()
         ]);
     }
 
