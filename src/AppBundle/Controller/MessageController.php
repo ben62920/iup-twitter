@@ -149,4 +149,14 @@ class MessageController extends Controller
             ->getForm()
         ;
     }
+
+    /**
+     * @Route("/tweet/{id}", name="show_one_tweet")
+     * @Method("GET")
+     **/
+    public function showTweetAction(Message $message)
+    {
+        return $this->render('message/showTweet.html.twig', array(
+            'message' => $message));
+    }
 }

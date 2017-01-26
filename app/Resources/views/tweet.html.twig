@@ -1,0 +1,39 @@
+<div class="panel panel-default">
+    <div class="panel-heading"> <a href="{{ path('user_message', {'username': message.user.username }) }}">{{ message.user.username }}</a>
+        {% if message.parent is not null %}
+            a retweeté
+        {% endif %}
+    </div>
+    <div class="panel-body">
+        {{ message.content }}
+        {{ include('upload.html.twig') }}
+
+        {% set statusId = 0 %}
+        {% for status in message.status %}
+            {% if status.user == app.user %}
+                {% set statusId = status.id %}
+            {% endif %}
+        {% endfor %}
+
+    </div>
+    <div class="panel-footer">
+        <i class="fa fa-thumbs-o-up" ></i>
+
+        {% if statusId > 0 %}
+            <a href="{{ path('unlike' , {'id' : statusId }) }}">
+                Je n'aime plus
+            </a>
+        {% else %}
+            <a href="{{ path('like' , {'id' : message.id }) }}">
+                J'aime
+            </a>
+        {% endif %}
+
+        {% if (message.parent is not null and message.parent.user != app.user)
+        or (message.parent is null) %}
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+            <a href="{{ path('retweet' , {'id' : message.id }) }}"> Retweet</a>
+        {% endif %}
+        <a href="mailto:votre_email?subject= tweet&body= {{ message.content }}">mail</a>
+    </div>
+</div>

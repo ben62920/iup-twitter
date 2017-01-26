@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    {{ parent() }}
+    <div id="wrapper">
+    <div id="container">
+    {{ include('tweet.html.twig') }}
+    </div>
+    </div>
+{% endblock %}
