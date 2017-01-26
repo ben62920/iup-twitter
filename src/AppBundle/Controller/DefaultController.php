@@ -55,15 +55,11 @@ class DefaultController extends Controller
             5/*limit per page*/
         );
 
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return $this->render('default/index.html.twig', [
-                'pagination' => $pagination, 'form' => $form->createView()
-            ]);
-        }else{
-            return $this->render('default/index.html.twig', [
-                'pagination' => $pagination
-            ]);
-        }
+
+        return $this->render('default/index.html.twig', [
+            'pagination' => $pagination
+        ]);
+
     }
 
     /**
